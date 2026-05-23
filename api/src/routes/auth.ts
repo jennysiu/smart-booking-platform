@@ -2,6 +2,8 @@ import { Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { prisma } from "../lib/prisma";
 import jwt from "jsonwebtoken";
+import crypto from "crypto"
+import {authenticate, AuthRequest} from "../middleware/authenticate";
 
 const router = Router();
 
@@ -50,13 +52,78 @@ router.post("/login", async (req: Request, res: Response) => {
     return;
   }
 
-  const token = jwt.sign(
+  const accessToken = jwt.sign(
     { userId: user.id, role: user.role },
     process.env.JWT_SECRET!,
     { expiresIn: "15m" },
   );
 
-  res.json({ token });
+  const refreshToken = crypto.randomBytes(64).toString("hex");
+
+  await prisma.refreshToken.create({
+    data: {
+      token: refreshToken,
+      userId: user.id,
+      expiresAt: new Date(Date.now() + 7 * 25 * 60 * 60 * 1000),
+    }
+  })
+
+  res.json({ accessToken , refreshToken});
 });
+
+router.post("/refresh", async (reg: Request, res: Response) => {
+  const { refreshToken } = reg.body;
+
+  if (!refreshToken) {
+    res.status(400).json({error: "Refresh token expired"})
+    return
+  }
+
+  const stored = await prisma.refreshToken.findUnique({
+    where: { token: refreshToken },
+    include: {user: true} });
+
+  if (!stored || stored.expiresAt < new Date()) {
+    res.status(401).json({ error: "Invalid or expired refresh token expired" });
+    return
+  }
+
+  // delete old refresh token
+  await prisma.refreshToken.delete({where: {token: refreshToken }});
+
+  // generate new refresh token
+  const newRefreshToken = crypto.randomBytes(64).toString("hex");
+
+  // add to DB
+  await prisma.refreshToken.create({
+    data: {
+      token: newRefreshToken,
+      userId: stored.userId,
+      expiresAt: new Date(Date.now() + 7 * 25 * 60 * 60 * 1000),
+    }
+  })
+
+  const accessToken = jwt.sign(
+      { userId: stored.userId, role: stored.user.role },
+      process.env.JWT_SECRET!,
+      { expiresIn: "15m" },
+  )
+
+  res.json({ accessToken, refreshToken, newRefreshToken });
+})
+
+router.post("/logout", authenticate, async (req: AuthRequest, res: Response) => {
+  const { refreshToken } = req.body;
+
+  if (refreshToken) {
+    // delete refresh token
+  try {
+    await prisma.refreshToken.delete({where: {token: refreshToken }});
+  } catch (error) {
+    console.warn("Logout: refresh token not found or already deleted", error);
+  }
+    res.json({message: "Logged out"})
+  }
+})
 
 export default router;

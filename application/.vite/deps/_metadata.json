@@ -1,0 +1,72 @@
+{
+  "hash": "3da8bd3e",
+  "configHash": "b7ea2ab1",
+  "lockfileHash": "cb33c529",
+  "browserHash": "bdb742f4",
+  "optimized": {
+    "@mui/material": {
+      "src": "../../node_modules/@mui/material/index.mjs",
+      "file": "@mui_material.js",
+      "fileHash": "45da5a01",
+      "needsInterop": false
+    },
+    "@mui/material/CssBaseline": {
+      "src": "../../node_modules/@mui/material/CssBaseline/index.mjs",
+      "file": "@mui_material_CssBaseline.js",
+      "fileHash": "de80f516",
+      "needsInterop": false
+    },
+    "@mui/material/styles": {
+      "src": "../../node_modules/@mui/material/styles/index.mjs",
+      "file": "@mui_material_styles.js",
+      "fileHash": "fcf2b4d7",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "2eb13e74",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "dab1f418",
+      "needsInterop": false
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "44d4ac39",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "24c71443",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "CssBaseline-DJmzXKuU": {
+      "file": "CssBaseline-DJmzXKuU.js",
+      "isDynamicEntry": false
+    },
+    "react-CZunmVaX": {
+      "file": "react-CZunmVaX.js",
+      "isDynamicEntry": false
+    },
+    "react-dom-DlAeUGhR": {
+      "file": "react-dom-DlAeUGhR.js",
+      "isDynamicEntry": false
+    },
+    "styled-CYKpZFDa": {
+      "file": "styled-CYKpZFDa.js",
+      "isDynamicEntry": false
+    },
+    "styles-DbwfMHk7": {
+      "file": "styles-DbwfMHk7.js",
+      "isDynamicEntry": false
+    }
+  }
+}

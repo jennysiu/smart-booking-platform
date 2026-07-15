@@ -9,10 +9,10 @@ const router = Router();
 
 // register
 router.post("/register", async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email, password, firstName, lastName } = req.body;
 
-  if (!email || !password) {
-    res.status(400).json({ error: "Email and password are required" });
+  if (!email || !password || !firstName || !lastName) {
+    res.status(400).json({ error: "Email, password, firstName and lastName are required" });
     return;
   }
 
@@ -25,7 +25,7 @@ router.post("/register", async (req: Request, res: Response) => {
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = await prisma.user.create({
-    data: { email, passwordHash },
+    data: { email, passwordHash, firstName, lastName },
   });
 
   res.status(201).json({ id: user.id, email: user.email });

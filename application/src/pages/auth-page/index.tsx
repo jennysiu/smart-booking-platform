@@ -15,12 +15,16 @@ export default function AuthPage() {
     email,
     password,
     confirmPassword,
+    firstName,
+    lastName,
     loading,
     error,
     success,
     setEmail,
     setPassword,
     setConfirmPassword,
+    setFirstName,
+    setLastName,
     reset,
     handleSubmit,
   } = useAuth();
@@ -48,6 +52,24 @@ export default function AuthPage() {
       {success && <Alert severity="success">{success}</Alert>}
 
       <Box>
+        {mode === "register" && (
+          <TextField
+            label="First name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            onKeyDown={onKeyDown}
+            autoComplete="given-name"
+          />
+        )}
+        {mode === "register" && (
+          <TextField
+            label="Last name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            onKeyDown={onKeyDown}
+            autoComplete="family-name"
+          />
+        )}
         <TextField
           label="Email"
           type="email"

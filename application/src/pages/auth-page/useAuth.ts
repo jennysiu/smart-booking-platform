@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type Mode = 'login' | 'register'
 
@@ -15,10 +16,13 @@ let accessToken: string | null = null
 export const getAccessToken = () => accessToken
 
 export function useAuth() {
+  const navigate = useNavigate()
   const [mode, setMode] = useState<Mode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -30,6 +34,8 @@ export function useAuth() {
     setEmail('')
     setPassword('')
     setConfirmPassword('')
+    setFirstName('')
+    setLastName('')
   }
 
   const handleSubmit = async () => {
@@ -37,6 +43,7 @@ export function useAuth() {
     setSuccess(null)
 
     if (!email || !password) return setError('Email and password are required.')
+    if (mode === 'register' && (!firstName || !lastName)) return setError('First and last name are required.')
     if (mode === 'register' && password !== confirmPassword) return setError("Passwords don't match.")
     if (password.length < 8) return setError('Password must be at least 8 characters.')
 
@@ -46,7 +53,9 @@ export function useAuth() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(
+          mode === 'login' ? { email, password } : { email, password, firstName, lastName },
+        ),
       })
 
       const data: AuthResponse = await res.json()
@@ -63,7 +72,7 @@ export function useAuth() {
         reset('login')
       } else {
         setSuccess(`Welcome back, ${data.user?.email ?? ''}!`)
-        // TODO: navigate('/dashboard')
+        navigate('/dashboard')
       }
     } catch {
       setError('Could not reach the server. Is it running on port 3000?')
@@ -73,9 +82,9 @@ export function useAuth() {
   }
 
   return {
-    mode, email, password, confirmPassword,
+    mode, email, password, confirmPassword, firstName, lastName,
     loading, error, success,
-    setEmail, setPassword, setConfirmPassword,
+    setEmail, setPassword, setConfirmPassword, setFirstName, setLastName,
     reset, handleSubmit,
   }
 }

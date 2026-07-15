@@ -13,14 +13,26 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(cuid())
-  email           String   @unique
-  passwordHash    String
-  role            Role     @default(CUSTOMER)
-  refreshTokens   RefreshToken[]
+  id            String         @id @default(cuid())
+  email         String         @unique
+  firstName     String
+  lastName      String
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  passwordHash  String
+  role          Role           @default(CUSTOMER)
+  refreshTokens RefreshToken[]
+
+  // Bookings where this user is the student
+  studentBookings   Booking[] @relation("StudentBookings")
+  // Bookings where this user is the coach
+  coachBookings     Booking[] @relation("CoachBookings")
+  // Bookings this user created (could be student self-booking, or coach/admin booking on their behalf)
+  createdBookings   Booking[] @relation("BookingCreatedBy")
+  // Bookings this user cancelled
+  cancelledBookings Booking[] @relation("BookingCancelledBy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {
@@ -36,4 +48,91 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id])
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdById String
+  createdBy   User   @relation("BookingCreatedBy", fields: [createdById], references: [id])
+
+  studentId String
+  student   User   @relation("StudentBookings", fields: [studentId], references: [id])
+
+  coachId String
+  coach   User   @relation("CoachBookings", fields: [coachId], references: [id])
+
+  courtId String
+  court   Court  @relation(fields: [courtId], references: [id])
+
+  startDateTime DateTime
+  endDateTime   DateTime
+
+  sessionType        SessionType
+  bookingStatus      BookingStatus
+
+  // Cancellation
+  cancelledAt         DateTime?
+  cancelledById       String?
+  cancelledBy         User?     @relation("BookingCancelledBy", fields: [cancelledById], references: [id])
+  cancellationReason  String?
+
+  // Session payment (coach fee)
+  sessionPrice         Decimal       @db.Money
+  sessionPaymentStatus PaymentStatus
+  sessionPaymentType   PaymentType
+
+  // Court payment (venue fee, paid separately)
+  courtsPrice          Decimal       @db.Money
+  courtsPaymentStatus  PaymentStatus
+
+  focusNotes   String?
+  coachNotes   String?
+  studentNotes String?
+}
+
+model Venue {
+  id       String  @id @default(cuid())
+  name     String
+  address  String
+  courts   Court[]
+}
+
+model Court {
+  id       String    @id @default(cuid())
+  venueId  String
+  venue    Venue     @relation(fields: [venueId], references: [id])
+  number   Int
+  bookings Booking[]
+
+  @@unique([venueId, number])
+}
+
+enum SessionType {
+  PRIVATE_LESSON
+  GROUP_SESSION
+}
+
+enum BookingStatus {
+  CONFIRMED
+  PENDING
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentType {
+  CASH
+  BANK_TRANSFER
+  PACKAGE_CREDIT
 }

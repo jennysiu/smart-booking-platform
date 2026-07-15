@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_BASE, setAccessToken } from '../../lib/api'
 
 type Mode = 'login' | 'register'
 
@@ -8,12 +9,6 @@ interface AuthResponse {
   user?: { id: string; email: string; role: string }
   error?: string
 }
-
-const API_BASE = 'http://localhost:3000'
-
-// In-memory token store — never localStorage
-let accessToken: string | null = null
-export const getAccessToken = () => accessToken
 
 export function useAuth() {
   const navigate = useNavigate()
@@ -65,7 +60,7 @@ export function useAuth() {
         return
       }
 
-      if (data.accessToken) accessToken = data.accessToken
+      if (data.accessToken) setAccessToken(data.accessToken)
 
       if (mode === 'register') {
         setSuccess('Account created! You can now sign in.')

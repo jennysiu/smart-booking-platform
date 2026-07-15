@@ -1,58 +1,11 @@
-import { i as __toESM, t as require_react } from "./react-CZunmVaX.js";
-import { J as GlobalStyles$2, T as useDefaultProps$1, a as defaultTheme, dt as require_jsx_runtime, ft as require_prop_types, vt as identifier_default, w as DefaultPropsProvider$1 } from "./styled-CYKpZFDa.js";
-//#region node_modules/@mui/material/GlobalStyles/GlobalStyles.mjs
+import { r as __toESM } from "./chunk-B-1-B7_t.js";
+import { t as require_react } from "./react.js";
+import { Dt as require_prop_types, bt as require_jsx_runtime } from "./styled-DZjdtl0V.js";
+import { n as globalCss, t as useDefaultProps } from "./DefaultPropsProvider-rNHap5ju.js";
+//#region node_modules/@mui/material/CssBaseline/CssBaseline.mjs
+var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_prop_types = /* @__PURE__ */ __toESM(require_prop_types(), 1);
 var import_jsx_runtime = require_jsx_runtime();
-function GlobalStyles$1(props) {
-	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(GlobalStyles$2, {
-		...props,
-		defaultTheme,
-		themeId: identifier_default
-	});
-}
-GlobalStyles$1.propTypes = { 
-/**
-* The styles you want to apply globally.
-*/
-styles: import_prop_types.default.oneOfType([
-	import_prop_types.default.array,
-	import_prop_types.default.func,
-	import_prop_types.default.number,
-	import_prop_types.default.object,
-	import_prop_types.default.string,
-	import_prop_types.default.bool
-]) };
-//#endregion
-//#region node_modules/@mui/material/zero-styled/index.mjs
-var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
-function globalCss(styles) {
-	return function GlobalStylesWrapper(props) {
-		return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(GlobalStyles$1, { styles: typeof styles === "function" ? (theme) => styles({
-			theme,
-			...props
-		}) : styles });
-	};
-}
-//#endregion
-//#region node_modules/@mui/material/DefaultPropsProvider/DefaultPropsProvider.mjs
-function DefaultPropsProvider(props) {
-	return /*#__PURE__*/ (0, import_jsx_runtime.jsx)(DefaultPropsProvider$1, { ...props });
-}
-DefaultPropsProvider.propTypes = {
-	/**
-	* @ignore
-	*/
-	children: import_prop_types.default.node,
-	/**
-	* @ignore
-	*/
-	value: import_prop_types.default.object.isRequired
-};
-function useDefaultProps(params) {
-	return useDefaultProps$1(params);
-}
-//#endregion
-//#region node_modules/@mui/material/CssBaseline/CssBaseline.mjs
 var isDynamicSupport = typeof globalCss({}) === "function";
 var html = (theme, enableColorScheme) => ({
 	WebkitFontSmoothing: "antialiased",
@@ -133,6 +86,6 @@ CssBaseline.propTypes = {
 	enableColorScheme: import_prop_types.default.bool
 };
 //#endregion
-export { globalCss as a, useDefaultProps as i, body as n, GlobalStyles$1 as o, html as r, CssBaseline as t };
+export { body as n, html as r, CssBaseline as t };
 
-//# sourceMappingURL=CssBaseline-DJmzXKuU.js.map
+//# sourceMappingURL=CssBaseline-C2gWNYMM.js.map
